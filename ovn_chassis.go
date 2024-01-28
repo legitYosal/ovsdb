@@ -147,18 +147,18 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 		return nil, fmt.Errorf("%s: no chassis found", cli.Database.Southbound.Name)
 	}
 	for _, row := range result.Rows {
-		var privateUUID 			string
+		// var privateUUID 			string
 		var privateName 			string
 		var privateNBCFG 			int
 		var privateNBCFGTimestamp 	int
-		if r, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
-			continue
-		} else {
-			if dt != "string" {
-				continue
-			}
-			privateUUID = r.(string)
-		}
+		// if r, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
+		// 	continue
+		// } else {
+		// 	if dt != "string" {
+		// 		continue
+		// 	}
+		// 	privateUUID = r.(string)
+		// }
 		if r, dt, err := row.GetColumnValue("name", result.Columns); err != nil {
 			continue
 		} else {
@@ -170,17 +170,17 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 		if r, dt, err := row.GetColumnValue("nb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "string" {
-			// 	continue
-			// }
+			if dt != "int" {
+				continue
+			}
 			privateNBCFG = r.(int)
 		}
 		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "string" {
-			// 	continue
-			// }
+			if dt != "int" {
+				continue
+			}
 			privateNBCFGTimestamp = r.(int)
 		}
 		for _, c := range chassis {
