@@ -41,51 +41,56 @@ func (cli *OvnClient) GetNBGlobal() (*OvnNBGlobal, error) {
 	if err != nil {
 		return nil, fmt.Errorf("%s: '%s' table error: %s", cli.Database.Northbound.Name, "NB_Global", err)
 	}
-	// if len(result.Rows) == 0 {
-	// 	return nil, fmt.Errorf("%s: no acl found", cli.Database.Northbound.Name)
-	// }
-	if r, dt, err := result.GetColumnValue("nb_cfg", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.NB_CFG = r.(int)
+	if len(result.Rows) == 0 {
+		return nil, fmt.Errorf("%s: nb global is empty!", cli.Database.Northbound.Name)
 	}
-	if r, dt, err := result.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.NB_CFG_Timestamp = r.(int)
+	if len(result.Rows) > 1 {
+		return nil, fmt.Errorf("%s: nb global has more than 1 Rows!", cli.Database.Northbound.Name)
 	}
-	if r, dt, err := result.GetColumnValue("hv_cfg", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.HV_CFG = r.(int)
-	}
-	if r, dt, err := result.GetColumnValue("hv_cfg_timestamp", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.HV_CFG_Timestamp = r.(int)
-	}
-	if r, dt, err := result.GetColumnValue("sb_cfg", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.SB_CFG = r.(int)
-	}
-	if r, dt, err := result.GetColumnValue("sb_cfg_timestamp", result.Columns); err != nil {
-		// continue
-	} else {
-		nbglobal.SB_CFG_Timestamp = r.(int)
-	}
-	if r, dt, err := result.GetColumnValue("external_ids", result.Columns); err != nil {
-		nbglobal.ExternalIDs = make(map[string]string)
-	} else {
-		if dt == "map[string]string" {
-			nbglobal.ExternalIDs = r.(map[string]string)
+	for _, row := range result.Rows {
+		if r, dt, err := row.GetColumnValue("nb_cfg", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.NB_CFG = r.(int)
 		}
-	}
-	if r, dt, err := result.GetColumnValue("options", result.Columns); err != nil {
-		nbglobal.Options = make(map[string]string)
-	} else {
-		if dt == "map[string]string" {
-			nbglobal.Options = r.(map[string]string)
+		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.NB_CFG_Timestamp = r.(int)
+		}
+		if r, dt, err := row.GetColumnValue("hv_cfg", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.HV_CFG = r.(int)
+		}
+		if r, dt, err := row.GetColumnValue("hv_cfg_timestamp", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.HV_CFG_Timestamp = r.(int)
+		}
+		if r, dt, err := row.GetColumnValue("sb_cfg", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.SB_CFG = r.(int)
+		}
+		if r, dt, err := row.GetColumnValue("sb_cfg_timestamp", row.Columns); err != nil {
+			continue
+		} else {
+			nbglobal.SB_CFG_Timestamp = r.(int)
+		}
+		if r, dt, err := row.GetColumnValue("external_ids", row.Columns); err != nil {
+			nbglobal.ExternalIDs = make(map[string]string)
+		} else {
+			if dt == "map[string]string" {
+				nbglobal.ExternalIDs = r.(map[string]string)
+			}
+		}
+		if r, dt, err := row.GetColumnValue("options", row.Columns); err != nil {
+			nbglobal.Options = make(map[string]string)
+		} else {
+			if dt == "map[string]string" {
+				nbglobal.Options = r.(map[string]string)
+			}
 		}
 	}
 	return nbglobal, nil
