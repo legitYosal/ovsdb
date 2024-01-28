@@ -22,14 +22,13 @@ import (
 // OvnACL holds ACL information.
 type OvnACL struct {
 	UUID        string `json:"uuid" yaml:"uuid"`
-	ExternalIDs map[string]string
 }
 
 // GetACL returns a list of OVN ACLs.
 func (cli *OvnClient) GetACL() ([]*OvnACL, error) {
 	acls := []*OvnACL{}
 	// First, get basic information about OVN logical switches.
-	query := "SELECT _uuid, external_ids FROM ACL"
+	query := "SELECT _uuid FROM ACL"
 	result, err := cli.Database.Northbound.Client.Transact(cli.Database.Northbound.Name, query)
 	if err != nil {
 		return nil, fmt.Errorf("%s: '%s' table error: %s", cli.Database.Northbound.Name, "ACL", err)
@@ -46,13 +45,6 @@ func (cli *OvnClient) GetACL() ([]*OvnACL, error) {
 				continue
 			}
 			acl.UUID = r.(string)
-		}
-		if r, dt, err := row.GetColumnValue("external_ids", result.Columns); err != nil {
-			acl.ExternalIDs = make(map[string]string)
-		} else {
-			if dt == "map[string]string" {
-				acl.ExternalIDs = r.(map[string]string)
-			}
 		}
 		acls = append(acls, acl)
 	}
