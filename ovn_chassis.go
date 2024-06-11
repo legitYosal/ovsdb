@@ -29,8 +29,8 @@ type OvnChassis struct {
 		UUID  string
 		Proto string
 	}
-	NB_CFG	  float64
-	NB_CFG_Timestamp float64
+	NB_CFG	  int64
+	NB_CFG_Timestamp int64
 	Up        int
 	Ports     []string
 	Switches  []string
@@ -158,8 +158,8 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 	for _, row := range result.Rows {
 		// var privateUUID 			string
 		var privateName 			string
-		var privateNBCFG 			float64
-		var privateNBCFGTimestamp 	float64
+		var privateNBCFG 			int64
+		var privateNBCFGTimestamp 	int64
 		// if r, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
 		// 	continue
 		// } else {
@@ -179,20 +179,18 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 		if r, dt, err := row.GetColumnValue("nb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "float64" {
+			// if dt != "int64" {
 			// 	continue
 			// }
-			fmt.Println(dt)
-			privateNBCFG = r.(float64)
+			privateNBCFG = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "float64" {
+			// if dt != "int64" {
 			// 	continue
 			// }
-			fmt.Println(dt)
-			privateNBCFGTimestamp = r.(float64)
+			privateNBCFGTimestamp = r.(int64)
 		}
 		for _, c := range chassis {
 			if c.Name != privateName {
