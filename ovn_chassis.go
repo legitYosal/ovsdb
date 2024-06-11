@@ -179,17 +179,17 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 		if r, dt, err := row.GetColumnValue("nb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "int64" {
-			// 	continue
-			// }
+			if dt != "int64" {
+				// continue
+			}
 			privateNBCFG = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			// if dt != "int64" {
-			// 	continue
-			// }
+			if dt != "int64" {
+				// continue
+			}
 			privateNBCFGTimestamp = r.(int64)
 		}
 		for _, c := range chassis {
