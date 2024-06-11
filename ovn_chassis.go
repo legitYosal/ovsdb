@@ -23,13 +23,14 @@ import (
 type OvnChassis struct {
 	UUID      string
 	Name      string
+	HostName  string
 	IPAddress net.IP
 	Encaps    struct {
 		UUID  string
 		Proto string
 	}
-	NB_CFG	  int
-	NB_CFG_Timestamp int
+	NB_CFG	  uint64
+	NB_CFG_Timestamp uint64
 	Up        int
 	Ports     []string
 	Switches  []string
@@ -39,7 +40,7 @@ type OvnChassis struct {
 func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 	chassis := []*OvnChassis{}
 	// First, get the names and UUIDs of chassis.
-	query := "SELECT _uuid, name, encaps FROM Chassis"
+	query := "SELECT _uuid, name, encaps, hostname FROM Chassis"
 	result, err := cli.Database.Southbound.Client.Transact(cli.Database.Southbound.Name, query)
 	if err != nil {
 		return nil, fmt.Errorf("%s: '%s' table error: %s", cli.Database.Southbound.Name, "Chassis", err)
@@ -66,6 +67,14 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 				continue
 			}
 			c.Name = r.(string)
+		}
+		if r, dt, err := row.GetColumnValue("hostname", result.Columns); err != nil {
+			continue
+		} else {
+			if dt != "string" {
+				continue
+			}
+			c.HostName = r.(string)
 		}
 		if r, dt, err := row.GetColumnValue("encaps", result.Columns); err != nil {
 			continue
@@ -149,8 +158,8 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 	for _, row := range result.Rows {
 		// var privateUUID 			string
 		var privateName 			string
-		var privateNBCFG 			int
-		var privateNBCFGTimestamp 	int
+		var privateNBCFG 			uint64
+		var privateNBCFGTimestamp 	uint64
 		// if r, dt, err := row.GetColumnValue("_uuid", result.Columns); err != nil {
 		// 	continue
 		// } else {
@@ -170,18 +179,20 @@ func (cli *OvnClient) GetChassis() ([]*OvnChassis, error) {
 		if r, dt, err := row.GetColumnValue("nb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
-			}
-			privateNBCFG = r.(int)
+			// if dt != "uint64" {
+			// 	continue
+			// }
+			fmt.Println(dt)
+			privateNBCFG = r.(uint64)
 		}
 		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
-			}
-			privateNBCFGTimestamp = r.(int)
+			// if dt != "uint64" {
+			// 	continue
+			// }
+			fmt.Println(dt)
+			privateNBCFGTimestamp = r.(uint64)
 		}
 		for _, c := range chassis {
 			if c.Name != privateName {
