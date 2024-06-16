@@ -23,13 +23,13 @@ import (
 type OvnNBGlobal struct {
 	UUID        string `json:"uuid" yaml:"uuid"`
 	ExternalIDs map[string]string
-	HV_CFG 		int
-	HV_CFG_Timestamp int
-	NB_CFG 		int
-	NB_CFG_Timestamp int
+	HV_CFG 		int64
+	HV_CFG_Timestamp int64
+	NB_CFG 		int64
+	NB_CFG_Timestamp int64
 	Options 	map[string]string
-	SB_CFG 		int
-	SB_CFG_Timestamp int
+	SB_CFG 		int64
+	SB_CFG_Timestamp int64
 }
 
 // GetACL returns a list of OVN ACLs.
@@ -51,50 +51,50 @@ func (cli *OvnClient) GetNBGlobal() (*OvnNBGlobal, error) {
 		if r, dt, err := row.GetColumnValue("nb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.NB_CFG = r.(int)
+			nbglobal.NB_CFG = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("nb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.NB_CFG_Timestamp = r.(int)
+			nbglobal.NB_CFG_Timestamp = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("hv_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.HV_CFG = r.(int)
+			nbglobal.HV_CFG = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("hv_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.HV_CFG_Timestamp = r.(int)
+			nbglobal.HV_CFG_Timestamp = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("sb_cfg", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.SB_CFG = r.(int)
+			nbglobal.SB_CFG = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("sb_cfg_timestamp", result.Columns); err != nil {
 			continue
 		} else {
-			if dt != "int" {
-				continue
+			if dt != "int64" {
+				// continue
 			}
-			nbglobal.SB_CFG_Timestamp = r.(int)
+			nbglobal.SB_CFG_Timestamp = r.(int64)
 		}
 		if r, dt, err := row.GetColumnValue("external_ids", result.Columns); err != nil {
 			nbglobal.ExternalIDs = make(map[string]string)
